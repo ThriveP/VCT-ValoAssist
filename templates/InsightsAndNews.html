@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALORANT Insights and News</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            background: linear-gradient(135deg, #0f1923, #1f2731);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .news-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #1f2731, #2c3540);
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255,70,85,0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        .news-header {
+            background: linear-gradient(90deg, #ff4655, #ff6b76);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .news-item {
+            padding: 25px;
+            border-bottom: 1px solid #3a4556;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.7s forwards;
+        }
+        .news-item:last-child {
+            border-bottom: none;
+        }
+        .news-title {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #ff4655;
+        }
+        .news-content {
+            font-size: 1.1em;
+            color: #e0e5ec;
+            line-height: 1.6;
+        }
+        .news-slide {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .news-slide.active {
+            display: block;
+            animation: fadeIn 0.5s forwards;
+        }
+        .slide-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: rgba(31, 39, 49, 0.8);
+        }
+        .slide-controls button {
+            background: linear-gradient(90deg, #ff4655, #ff6b76);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .slide-controls button:hover {
+            background: linear-gradient(90deg, #ff6b76, #ff8c94);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 70, 85, 0.3);
+        }
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(90deg, #ff4655, #ff6b76);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .back-button:hover {
+            background: linear-gradient(90deg, #ff6b76, #ff8c94);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 70, 85, 0.3);
+        }
+        .dots-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        .dot.active {
+            background-color: #ff4655;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="news-container">
+        <button class="back-button" onclick="window.location.href='/chat'">Back to Chat</button>
+        <div class="news-header">
+            <h1>VALORANT Insights and News</h1>
+        </div>
+        <div id="news-content">
+            <!-- News content will be dynamically inserted here -->
+        </div>
+        <div class="slide-controls">
+            <button id="prevSlide">Previous</button>
+            <button id="nextSlide">Next</button>
+        </div>
+        <div class="dots-container" id="dots-container">
+            <!-- Dots will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let slides = [
+            [
+                {
+                    title: "Optimal Team Composition Strategies",
+                    content: "Discover the best team setups based on player roles and performance data. Learn how to create a balanced team with strong duelists and initiators."
+                },
+                {
+                    title: "Player Stats and Insights",
+                    content: "Get instant access to individual player stats, including kills/deaths, agent preferences, and win rates. Compare players head-to-head and analyze their performance."
+                },
+                {
+                    title: "Team Performance Analysis",
+                    content: "Analyze your team's strengths and weaknesses. Get insights into how your team might fare against popular compositions and receive suggestions for improvements."
+                },
+                {
+                    title: "Building a Balanced Team",
+                    content: "Learn how to build a balanced team with a strong duelist. Get recommendations on player combinations based on recent performance and statistical advantages."
+                }
+            ],
+            [
+                {
+                    title: "Player Comparisons",
+                    content: "Compare players on their performance with specific agents. Retrieve historical performance trends and make informed decisions for your team."
+                },
+                {
+                    title: "Esports Coaches and Analysts",
+                    content: "Quickly analyze player stats and assemble ideal teams for scrimmages or tournaments. Leverage data to make strategic decisions and improve team performance."
+                },
+                {
+                    title: "Casual Fans and Fantasy Teams",
+                    content: "Build fantasy teams and explore player comparisons. Engage with the game on a deeper level by understanding player stats and performance metrics."
+                },
+                {
+                    title: "Content Creators",
+                    content: "Get insights to create engaging content like team analysis or match predictions. Use data to provide valuable information to your audience."
+                }
+            ],
+            [
+                {
+                    title: "Team Synergy Predictions",
+                    content: "Predict team synergy and receive suggestions for improvements. Ensure your team has a balanced agent composition and optimal player roles."
+                },
+                {
+                    title: "Cost-Effective Development",
+                    content: "Learn how to develop a conversational assistant using Amazon Bedrock. Reduce development and training costs with pre-trained models and easy integration."
+                },
+                {
+                    title: "User-Friendly Chat Interface",
+                    content: "Interact with the assistant naturally through text. The simple chat interface makes it accessible and user-friendly, even for non-technical users."
+                },
+                {
+                    title: "Leveraging Amazon Bedrock",
+                    content: "Utilize Amazon Bedrock's pre-trained models for cost-effective development. Integrate with available esports datasets to provide valuable insights and recommendations."
+                }
+            ],
+            [
+                {
+                    title: "Performance Metrics and Analysis",
+                    content: "Get detailed performance metrics for individual players and teams. Analyze data to make informed decisions and improve team performance."
+                },
+                {
+                    title: "Historical Performance Trends",
+                    content: "Retrieve historical performance trends for individual players. Use this data to predict future performance and make strategic decisions."
+                },
+                {
+                    title: "Agent Preferences and Win Rates",
+                    content: "Discover player preferences for specific agents and their win rates. Use this information to build a team with a strong agent composition."
+                },
+                {
+                    title: "Statistical Advantages",
+                    content: "Leverage statistical advantages to create optimized teams. Understand the strengths and weaknesses of different player combinations."
+                }
+            ],
+            [
+                {
+                    title: "Team Composition Suggestions",
+                    content: "Get suggestions for optimal team setups based on player roles and performance data. Ensure your team has a balanced composition with strong players."
+                },
+                {
+                    title: "Player Insights Q&A",
+                    content: "Ask questions about player stats and performance metrics. Get instant answers and insights to make informed decisions for your team."
+                },
+                {
+                    title: "Esports Data Integration",
+                    content: "Integrate with available esports datasets to provide valuable insights. Use data to analyze player performance and make strategic decisions."
+                },
+                {
+                    title: "Fantasy Team Builder",
+                    content: "Build your own fantasy team and compare player stats. Engage with the game on a deeper level by understanding player performance metrics."
+                }
+            ]
+        ];
+
+        function renderSlide() {
+            const newsContent = document.getElementById('news-content');
+            newsContent.innerHTML = '';
+            const slide = slides[currentSlide];
+            
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'news-slide active';
+            
+            for (let item of slide) {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'news-item';
+                itemDiv.innerHTML = `
+                    <div class="news-title">${item.title}</div>
+                    <div class="news-content">${item.content}</div>
+                `;
+                slideDiv.appendChild(itemDiv);
+            }
+            
+            newsContent.appendChild(slideDiv);
+            updateDots();
+        }
+
+        function updateDots() {
+            const dotsContainer = document.getElementById('dots-container');
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                if (i === currentSlide) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    currentSlide = i;
+                    renderSlide();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        document.getElementById('prevSlide').addEventListener('click', () => {
+            currentSlide = (currentSlide === 0) ? slides.length - 1 : currentSlide - 1;
+            renderSlide();
+        });
+
+        document.getElementById('nextSlide').addEventListener('click', () => {
+            currentSlide = (currentSlide === slides.length - 1) ? 0 : currentSlide + 1;
+            renderSlide();
+        });
+
+        // Render initial slide
+        renderSlide();
+    </script>
+</body>
+</html>
+

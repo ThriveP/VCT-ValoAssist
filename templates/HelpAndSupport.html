@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Support - ValoAssist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d0d0d, #1c1c1c);
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4655;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .faq-section {
+            margin-top: 30px;
+        }
+        .faq-item {
+            background: #2d2d2d;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        .faq-item:hover {
+            transform: translateY(-3px);
+        }
+        .faq-question {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .faq-answer.active {
+            max-height: 1000px;
+            padding: 15px;
+        }
+        .contact-button, .back-button {
+            display: inline-block;
+            width: 200px;
+            margin: 30px 10px;
+            padding: 10px;
+            background-color: #ff4655;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.2s, transform 0.2s;
+            animation: pulse 1.5s infinite;
+        }
+        .contact-button:hover, .back-button:hover {
+            background-color: #e63e4c;
+            transform: scale(1.05);
+        }
+        .back-button {
+            background-color: #4a4a4a;
+        }
+        .back-button:hover {
+            background-color: #5a5a5a;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Help & Support</h1>
+        
+        <div class="faq-section">
+            <div class="faq-item">
+                <div class="faq-question">
+                    What is ValoAssist?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    ValoAssist is a comprehensive VALORANT Esports Team Builder and Player Insights Assistant. It is designed to help users create optimized VALORANT teams and provides detailed insights into player statistics and performance metrics through an intuitive chat interface. Whether you are a casual player or a competitive team manager, ValoAssist offers valuable tools to enhance your VALORANT experience.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I use the Team Builder feature?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    To use the Team Builder, start a chat in the main interface and ask for team composition suggestions. You can specify roles, playstyles, or preferences, and our AI will provide recommendations based on player statistics, synergies, and current meta. For example, you can ask for a balanced team with a strong duelist and good map control. The AI will analyze the best possible combinations and explain its choices, helping you understand the team dynamics.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    How can I get player stats and comparisons?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    You can access individual player statistics or compare players directly in the chat. For instance, you can ask for Player A's statistics on Jett in the last five matches or compare Player A and Player B on their Jett performance, focusing on entry frags and first blood percentage. The assistant will provide insights based on recent data, including breakdowns of aim accuracy, ability usage, economic performance, and more. This feature is particularly useful for team managers and players looking to improve their game.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I use the Team Performance Analysis feature?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    After building a team or specifying an existing lineup, you can request a performance breakdown. You can ask for an analysis of the team's strengths and weaknesses on a specific map or how the team would perform against a composition heavy on controllers. The assistant will provide insights based on player roles, agent abilities, historical performance data, and current meta trends. It will highlight synergies, potential weaknesses, and suggest strategies to maximize the team's effectiveness. This feature is invaluable for pre-game planning and post-match analysis.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Is ValoAssist suitable for beginners?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    ValoAssist is designed to be user-friendly and informative for all skill levels. For beginners, it offers knowledge about agents, roles, and basic strategies. You can ask for the best agent for a beginner or an explanation of the role of a sentinel in simple terms. The AI will provide clear explanations tailored to your level of understanding. As you grow more experienced, you can explore more complex queries about advanced tactics, economy management, and pro-level strategies. ValoAssist grows with you, making it an excellent companion throughout your VALORANT journey.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How up-to-date is the player data?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We are committed to providing the most current and accurate data possible. Our system updates player statistics and performance metrics multiple times daily, pulling from official VALORANT API endpoints and trusted third-party data providers. This ensures that you are working with information that reflects recent matches and tournaments. However, due to API limitations and data processing times, there might be a slight delay in reflecting the very latest matches. For critical decision-making, we recommend cross-referencing with official VALORANT sources. You can always ask the assistant when the data was last updated for the most current information on data freshness.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I save my favorite team compositions?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Currently, ValoAssist does not have a built-in feature to permanently save team compositions. However, you can create a unique team code for any composition by asking the assistant to generate a code for the team. The AI will provide a short, memorable code that you can note down. Later, you can recreate the team by saying the team code. This allows you to quickly reference and discuss specific team compositions without the need for a full save feature. We are actively working on implementing a more robust save and share system in upcoming updates.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    How do I report issues or suggest improvements?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We highly value your feedback as it helps us improve ValoAssist. If you encounter any issues, have suggestions for new features, or want to share your experience, please use the Contact Support button below. When reporting, please provide as much detail as possible, including a clear description of the issue or suggestion, steps to reproduce the problem, your device and browser information, and screenshots or error messages if relevant. Our support team reviews all feedback promptly, usually responding within 24 to 48 hours. For critical issues, we aim to provide updates even sooner. Your input directly influences our development priorities, so do not hesitate to share your thoughts.
+                </div>
+            </div>
+        </div>
+        
+        <a href="#" class="contact-button">Contact Support</a>
+        <a href="/" class="back-button">Back to Chat</a>
+    </div>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.classList.toggle('active');
+                question.querySelector('i').classList.toggle('fa-chevron-up');
+                question.querySelector('i').classList.toggle('fa-chevron-down');
+            });
+        });
+    </script>
+</body>
+</html>

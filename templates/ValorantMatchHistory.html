@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant Map History</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column; /* Changed to column for layout */
+            align-items: center; /* Center align items */
+            height: 100vh; /* Ensure body takes full height */
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #ECE8E1;
+            text-decoration: none;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            color: #FF4655;
+        }
+        .search-bar {
+            margin: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ff4655;
+            background-color: #2c2c2c;
+            color: #ffffff;
+            width: 80%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            transition: box-shadow 0.3s;
+        }
+        .search-bar:focus {
+            box-shadow: 0 0 10px rgba(255, 70, 85, 0.5);
+        }
+        .map-tabs {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            width: 80%;
+            align-items: center; /* Align items vertically */
+        }
+        .map-tabs::before {
+            content: "Maps: "; /* Label for maps */
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .map-tab {
+            padding: 20px;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .map-tab:hover {
+            background-color: #3a3a3a;
+            box-shadow: 0 0 15px rgba(255, 70, 85, 0.5);
+            transform: scale(1.05);
+        }
+        .map-container {
+            position: relative; /* Changed to relative for top positioning */
+            height: 300px; /* Adjusted height */
+            background-image: url('valorant-map-background.jpg');
+            background-size: contain; /* Ensures the image scales properly */
+            border: 2px solid #ff4655;
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.5s, transform 0.5s ease-in-out; /* Smooth transition for opacity and movement */
+            width: 65%; /* Adjusted width */
+            margin: 20px 0; /* Margin for spacing */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+            margin-top: 20px; /* Added margin to separate from other elements */
+            display: none; /* Initially hidden */
+            transform: translateX(-7cm); /* Move the map container 7 cm to the left */
+        }
+        .red-dot {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: red;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+        .red-dot:hover {
+            animation: glow 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px red; }
+            50% { box-shadow: 0 0 20px red; }
+            100% { box-shadow: 0 0 5px red; }
+        }
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            width: 30%; /* Sidebar width */
+            padding: 15px; /* Increased padding */
+            background: linear-gradient(135deg, #2c2c2c, #3a3a3a); /* Gradient background */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            margin: 20px; /* Margin for spacing */
+            position: absolute; /* Positioning for sidebar */
+            right: 0; /* Align to the right */
+            top: 90px; /* Adjusted to move down by 4 cm */
+            max-height: 400px; /* Increased height for more teams */
+            overflow-y: auto; /* Scrollable if too many teams */
+            transition: transform 0.5s; /* Smooth transition for team list */
+            scrollbar-width: thin; /* For Firefox */
+            padding-right: 20px; /* Space for scrollbar */
+        }
+        .team-list::before {
+            content: "Team List"; /* Label for team list */
+            position: absolute;
+            top: -20px; /* Adjust position as needed */
+            left: 15px; /* Adjust position as needed */
+            font-size: 20px;
+            color: #ffffff;
+        }
+        .team-list-title {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 10px; /* Space below the title */
+        }
+        .team-card {
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px; /* Space between teams */
+            cursor: pointer;
+            transition: all 0.3s ease; /* Smooth transition */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .team-card:hover {
+            background-color: #3a3a3a;
+            transform: scale(1.05); /* Slight zoom effect */
+        }
+        .player-list {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            gap: 5px; /* Space between players */
+            margin-top: 10px; /* Space above player list */
+            transition: max-height 0.5s ease-in-out; /* Smooth transition for player list */
+            overflow: hidden; /* Hide overflow */
+        }
+        .player-card {
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            padding: 10px; /* Adjusted padding */
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Added shadow for depth */
+        }
+        .player-card:hover {
+            background-color: #ff4655;
+        }
+        .player-card.selected {
+            background-color: #ffcc00; /* Highlight selected player */
+        }
+        .chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: #ff4655;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+            animation: bounce 1s infinite alternate;
+        }
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        .chat-icon:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+        }
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            right: 80px; /* Adjusted to move left of the chat icon */
+            width: 250px; /* Made chat window smaller */
+            height: 350px; /* Made chat window smaller */
+            background-color: #2c2c2c;
+            border: 1px solid #ff4655;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            animation: slideIn 0.5s forwards;
+            border-radius: 10px; /* Curved edges */
+            padding-right: 20px; /* Space for scrollbar */
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .chat-input {
+            width: calc(100% - 20px); /* Smaller width to prevent overflow */
+            padding: 5px; /* Smaller padding */
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden; /* Prevent horizontal overflow */
+            white-space: nowrap; /* Prevent text wrapping */
+            text-overflow: ellipsis; /* Show ellipsis for overflow text */
+        }
+        .toggle-arrow {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+        /* Custom scrollbar styles */
+        .team-list::-webkit-scrollbar {
+            width: 12px; /* Width of the scrollbar */
+        }
+        .team-list::-webkit-scrollbar-thumb {
+            background: #ff4655; /* Color of the scrollbar thumb */
+            border-radius: 10px; /* Curved edges for scrollbar thumb */
+            border: 3px solid #2c2c2c; /* Space around the thumb */
+        }
+        .team-list::-webkit-scrollbar-track {
+            background: #2c2c2c; /* Color of the scrollbar track */
+            border-radius: 10px; /* Curved edges for scrollbar track */
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-btn">&#8592;</a>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search teams or maps..." oninput="filterTeams()">
+
+    <div class="map-tabs">
+        <div class="map-tab" onclick="showMap('Ascent')">Ascent</div>
+        <div class="map-tab" onclick="showMap('Bind')">Bind</div>
+        <div class="map-tab" onclick="showMap('Haven')">Haven</div>
+        <div class="map-tab" onclick="showMap('Split')">Split</div>
+        <div class="map-tab" onclick="showMap('Fracture')">Fracture</div>
+        <div class="map-tab" onclick="showMap('Breeze')">Breeze</div>
+        <div class="map-tab" onclick="showMap('Lotus')">Lotus</div>
+    </div>
+
+    <div class="team-list" id="teamList">
+        <div class="team-list-title">Teams</div> <!-- Added title for team list -->
+        <!-- Team cards will be dynamically generated here -->
+    </div>
+
+    <div class="map-container" id="mapContainer" style="display: none;">
+        <!-- Red dots will be dynamically generated here -->
+    </div>
+
+    <div class="chat-icon" onclick="toggleChat()">
+        💬
+    </div>
+    <div class="chat-window" id="chatWindow">
+        <div id="chatMessages"></div>
+        <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
+
+    <script>
+        const maps = {
+            'Ascent': [
+                {x: 100, y: 150, team: 'Vipre', players: ['Player 1', 'Player 2', 'Player 3', 'Player 4'], stats: {kills: 10, strategies: 'Aggressive'}},
+                {x: 120, y: 180, team: 'Damn', players: ['Player 5', 'Player 6', 'Player 7', 'Player 8'], stats: {kills: 8, strategies: 'Defensive'}}
+            ],
+            'Bind': [
+                {x: 200, y: 250, team: 'Hero', players: ['Player 9', 'Player 10', 'Player 11', 'Player 12'], stats: {kills: 12, strategies: 'Flanking'}},
+                {x: 220, y: 280, team: 'Chaos', players: ['Player 13', 'Player 14', 'Player 15', 'Player 16'], stats: {kills: 9, strategies: 'Rush'}}
+            ],
+            'Haven': [
+                {x: 300, y: 350, team: 'Inferno', players: ['Player 17', 'Player 18', 'Player 19', 'Player 20'], stats: {kills: 15, strategies: 'Split'}},
+                {x: 320, y: 380, team: 'Eclipse', players: ['Player 21', 'Player 22', 'Player 23', 'Player 24'], stats: {kills: 11, strategies: 'Control'}}
+            ],
+            'Split': [
+                {x: 400, y: 450, team: 'Phoenix', players: ['Player 25', 'Player 26', 'Player 27', 'Player 28'], stats: {kills: 14, strategies: 'Vertical'}},
+                {x: 420, y: 480, team: 'Chaos', players: ['Player 29', 'Player 30', 'Player 31', 'Player 32'], stats: {kills: 10, strategies: 'Zoning'}}
+            ],
+            'Fracture': [
+                {x: 500, y: 550, team: 'Inferno', players: ['Player 33', 'Player 34', 'Player 35', 'Player 36'], stats: {kills: 13, strategies: 'Diverse'}},
+                {x: 520, y: 580, team: 'Eclipse', players: ['Player 37', 'Player 38', 'Player 39', 'Player 40'], stats: {kills: 7, strategies: 'Aggressive'}}
+            ],
+            'Breeze': [
+                {x: 600, y: 650, team: 'Hero', players: ['Player 41', 'Player 42', 'Player 43', 'Player 44'], stats: {kills: 16, strategies: 'Long Range'}},
+                {x: 620, y: 680, team: 'Damn', players: ['Player 45', 'Player 46', 'Player 47', 'Player 48'], stats: {kills: 9, strategies: 'Control'}}
+            ],
+            'Lotus': [
+                {x: 700, y: 750, team: 'Chaos', players: ['Player 49', 'Player 50', 'Player 51', 'Player 52'], stats: {kills: 11, strategies: 'Balanced'}},
+                {x: 720, y: 780, team: 'Vipre', players: ['Player 53', 'Player 54', 'Player 55', 'Player 56'], stats: {kills: 8, strategies: 'Aggressive'}}
+            ]
+        };
+
+        const teamNames = ['Vipre', 'Damn', 'Hero', 'Chaos', 'Inferno', 'Eclipse', 'Phoenix'];
+        let currentTeam = '';
+
+        function showMap(mapName) {
+            const mapContainer = document.getElementById('mapContainer');
+            mapContainer.style.display = 'block'; // Show the map container
+            mapContainer.style.opacity = 0; // Fade out
+            setTimeout(() => {
+                mapContainer.innerHTML = '';
+                maps[mapName].forEach(dot => {
+                    const redDot = document.createElement('div');
+                    redDot.className = 'red-dot';
+                    redDot.style.left = dot.x + 'px';
+                    redDot.style.top = dot.y + 'px';
+                    redDot.onclick = () => showLandingInfo(dot);
+                    mapContainer.appendChild(redDot);
+                });
+                mapContainer.style.opacity = 1; // Fade in
+            }, 500);
+            displayTeamNames(mapName);
+        }
+
+        function displayTeamNames(mapName) {
+            const teamList = document.getElementById('teamList');
+            teamList.innerHTML = '<div class="team-list-title">Teams</div>'; // Added title for team list
+            maps[mapName].forEach(dot => {
+                const teamCard = document.createElement('div');
+                teamCard.className = 'team-card';
+                teamCard.innerHTML = `${dot.team} <span class="toggle-arrow" onclick="togglePlayerList('${dot.team}', this)">▼</span>`;
+                teamList.appendChild(teamCard);
+            });
+            // Do not display players for any team by default
+        }
+
+        function togglePlayerList(teamName, arrow) {
+            const playerList = document.createElement('div');
+            playerList.className = 'player-list';
+            const players = [];
+
+            // Collect players for the selected team
+            for (const map in maps) {
+                maps[map].forEach(dot => {
+                    if (dot.team === teamName) {
+                        players.push(...dot.players);
+                    }
+                });
+            }
+
+            // Create player list
+            players.sort().forEach(player => {
+                const playerCard = document.createElement('div');
+                playerCard.className = 'player-card';
+                playerCard.innerText = player;
+                playerCard.onclick = () => highlightPlayer(playerCard);
+                playerList.appendChild(playerCard);
+            });
+
+            // Show the player list under the selected team
+            const teamCards = document.querySelectorAll('.team-card');
+            teamCards.forEach(card => {
+                if (card.innerText.includes(teamName)) {
+                    // Clear previous player list if exists
+                    const existingPlayerList = card.querySelector('.player-list');
+                    if (existingPlayerList) {
+                        existingPlayerList.remove();
+                    }
+                    card.appendChild(playerList);
+                    playerList.style.display = 'none'; // Keep player list hidden initially
+                }
+            });
+
+            // Minimize player list when clicking the arrow
+            if (arrow.innerText === '▼') {
+                arrow.innerText = '▲'; // Change arrow to up
+                playerList.style.display = 'flex'; // Show player list
+            } else {
+                arrow.innerText = '▼'; // Change arrow to down
+                playerList.style.display = 'none'; // Hide player list
+            }
+        }
+
+        function highlightPlayer(playerCard) {
+            const playerCards = document.querySelectorAll('.player-card');
+            playerCards.forEach(card => card.classList.remove('selected'));
+            playerCard.classList.add('selected');
+        }
+
+        function showLandingInfo(dot) {
+            const infoDiv = document.createElement('div');
+            infoDiv.style.position = 'fixed';
+            infoDiv.style.bottom = '88px'; // Adjusted to 3cm down
+            infoDiv.style.left = '7cm'; // Adjusted to 3cm left
+            infoDiv.style.backgroundColor = '#2c2c2c';
+            infoDiv.style.border = '1px solid #ff4655';
+            infoDiv.style.borderRadius = '10px';
+            infoDiv.style.padding = '10px';
+            infoDiv.style.animation = 'slideIn 0.5s forwards';
+            infoDiv.innerHTML = `<strong>Team:</strong> ${dot.team}<br><strong>Players:</strong> ${dot.players.join(', ')}<br><strong>Kills:</strong> ${dot.stats.kills}<br><strong>Strategies:</strong> ${dot.stats.strategies}`;
+            document.body.appendChild(infoDiv);
+            setTimeout(() => {
+                infoDiv.style.transform = 'translateY(-10px)';
+            }, 100);
+            setTimeout(() => {
+                infoDiv.remove();
+            }, 3000);
+        }
+
+        function highlightTeam(teamName) {
+            const teamCards = document.querySelectorAll('.team-card');
+            teamCards.forEach(card => {
+                card.style.backgroundColor = card.innerText.includes(teamName) ? '#ffcc00' : '#2c2c2c'; // Highlight selected team
+            });
+            togglePlayerList(teamName);
+        }
+
+        function filterTeams() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const teamList = document.getElementById('teamList');
+            teamList.innerHTML = '<div class="team-list-title">Teams</div>'; // Added title for team list
+            teamNames.forEach((team) => {
+                if (team.toLowerCase().includes(input)) {
+                    const teamCard = document.createElement('div');
+                    teamCard.className = 'team-card';
+                    teamCard.innerHTML = `${team} <span class="toggle-arrow" onclick="togglePlayerList('${team}', this)">▼</span>`;
+                    teamCard.onclick = () => highlightTeam(team);
+                    teamList.appendChild(teamCard);
+                }
+            });
+            // Filter map tabs as well
+            const mapTabs = document.querySelectorAll('.map-tab');
+            mapTabs.forEach(tab => {
+                if (tab.innerText.toLowerCase().includes(input)) {
+                    tab.style.display = 'block';
+                } else {
+                    tab.style.display = 'none';
+                }
+            });
+        }
+
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+            if (chatWindow.style.display === 'block') {
+                chatWindow.style.animation = 'slideIn 0.5s forwards';
+            }
+        }
+
+        function sendMessage(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('chatInput');
+                const message = input.value;
+                input.value = '';
+                const messageDiv = document.createElement('div');
+                messageDiv.innerHTML = message;
+                messageDiv.style.animation = 'slideIn 0.5s forwards';
+                document.getElementById('chatMessages').appendChild(messageDiv);
+                // Simulate a response
+                setTimeout(() => {
+                    const botMessageDiv = document.createElement('div');
+                    botMessageDiv.innerHTML = `Bot: ${getBotResponse(message)}`;
+                    botMessageDiv.style.animation = 'slideIn 0.5s forwards';
+                    document.getElementById('chatMessages').appendChild(botMessageDiv);
+                }, 500);
+            }
+        }
+
+        function getBotResponse(message) {
+            const responses = [
+                "That's interesting!",
+                "Tell me more!",
+                "I see!",
+                "What else?",
+                "Can you elaborate?"
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Initialize team names display
+        displayTeamNames('Ascent'); // Default to the first map
+    </script>
+</body>
+</html>

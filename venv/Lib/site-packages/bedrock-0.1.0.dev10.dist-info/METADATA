@@ -1,0 +1,112 @@
+Metadata-Version: 2.1
+Name: bedrock
+Version: 0.1.0.dev10
+Summary: Bedrock is a high-level text pre-processing API, written in Python and can run on NLTK or Spacy as its backends.
+Home-page: http://github.com/openmednlp/bedrock
+Author: Ivan Nesic
+Author-email: ivan.nesic@usb.ch
+License: MIT
+Keywords: nlp pre-processing text
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Text Processing :: Linguistic
+Classifier: Topic :: Software Development :: Libraries
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3
+Requires-Dist: matplotlib (==2.2.2)
+Requires-Dist: nltk (==3.2.5)
+Requires-Dist: pandas (==0.22.0)
+Requires-Dist: spacy (==2.0.11)
+Requires-Dist: wordcloud (==1.4.1)
+Requires-Dist: pillow (==5.1.0)
+Requires-Dist: scikit-learn (==0.19.1)
+Requires-Dist: gensim (==3.4.0)
+Requires-Dist: texttable (==1.2.1)
+
+Bedrock
+=======
+
+|Build Status|
+
+You have discovered bedrock
+---------------------------
+
+**Bedrock** is a high-level text pre-processing API, written in Python
+and can run on NLTK or Spacy as its backends. It allows you to quickly
+perform the text processing groundwork without having. It does the
+menial work, so you don't have to.
+
+Use this library if you find the following highlights useful: \* Fast
+prototyping \* Switching between different backends \* Work in batches,
+rather than writing loops \* Support for DataFrame inputs/outputs
+
+Install **bedrock** in a jiffy:
+
+.. code:: bash
+
+    pip install bedrock
+    bedrock download all
+
+From zero to bedrock hero in 10 seconds
+---------------------------------------
+
+Now you can run
+
+.. code:: python
+
+    import bedrock
+    bedrock.process.pipeline('Hallo Welt')
+
+Congrats! :tada:
+
+Engines and Languages
+---------------------
+
+Currently **bedrock** supports the following engines: \* spacy \* nltk
+
+And the following languages and corresponding download arguments: \*
+English ('en' or 'english') \* German ('de', 'german' or 'deutsch')
+
+Installation and usage
+----------------------
+
+Package installation
+
+.. code:: bash
+
+    pip install bedrock
+
+Install support for all languages:
+
+.. code:: bash
+
+    bedrock download all
+
+Install support only for English:
+
+.. code:: bash
+
+    bedrock download en
+
+Install support for German:
+
+.. code:: bash
+
+    bedrock download de
+
+Import modules from package in your code:
+
+.. code:: python
+
+    from bedrock import process    # Processing texts
+    from bedrock import collection # Loading data collections
+    from bedrock import common     # Some common functions
+    from bedrock import feature    # Feature extraction
+    from bedrock import viz        # Visualizations
+
+.. |Build Status| image:: https://travis-ci.org/openmednlp/bedrock.svg?branch=master
+   :target: https://travis-ci.org/openmednlp/bedrock
+
+
